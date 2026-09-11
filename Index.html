@@ -247,17 +247,6 @@ button, .btn-start, .tl-btn, .acc-row, .icon-btn, .bib-close {
 .cover-art, .cover-art-mobile, .intro-bg, .ev-illo, .acc-illo, svg {
   pointer-events: none !important;
 }
-/* ── TOUCH DEFENSIVE OVERRIDES (MOBILE TOUCH FIX) ── */
-button, .btn-start, .tl-btn, .acc-row, .icon-btn, .bib-close {
-  position: relative !important;
-  z-index: 9999 !important;
-  touch-action: manipulation !important;
-  -webkit-tap-highlight-color: transparent !important;
-  cursor: pointer !important;
-}
-.cover-art, .cover-art-mobile, .intro-bg, .ev-illo, .acc-illo, svg {
-  pointer-events: none !important;
-}
 @media(max-width:560px){
   html,body{overflow:auto;height:auto;}
   .screen{overflow:visible;}
@@ -371,3 +360,85 @@ button, .btn-start, .tl-btn, .acc-row, .icon-btn, .bib-close {
 }
 </style>
 </head>
+<body>
+  <!-- AppBar -->
+  <header class="appbar">
+    <div class="appbar-inner">
+      <div class="appbar-logo">
+        <svg id="sv-logo-root" viewBox="0 0 112 56"><rect fill="#e3120b" width="112" height="56"/><g fill="#fff"><path d="M17.68,24.2V15.24h5.67v1.84h-3.62v1.62h3.34v1.79h-3.34v1.85h3.86v1.85h-5.91Z"/></g></svg>
+      </div>
+      <div class="appbar-divider"></div>
+      <div class="appbar-title">The lead-up to the US-China rivalry</div>
+    </div>
+  </header>
+
+  <!-- Cover Screen -->
+  <section id="cover" class="screen is-active">
+    <div class="cover-stage">
+      <div class="cover-text">
+        <h1 class="cover-title">The lead-up to the US-China rivalry</h1>
+        <button class="btn-start">Start</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro Screen -->
+  <section id="intro" class="screen">
+    <div class="work-outer">
+      <div class="work-inner">
+        <div class="intro-body">
+          <div class="intro-copy">
+            <p>Explore the key historical moments that shaped modern US-China relations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mobile-Safe JavaScript -->
+  <script>
+    function bindTap(element, handler) {
+      if (!element) return;
+      let touched = false;
+
+      element.addEventListener('touchend', function(e) {
+        touched = true;
+        e.preventDefault();
+        handler.call(this, e);
+      }, { passive: false });
+
+      element.addEventListener('click', function(e) {
+        if (!touched) {
+          handler.call(this, e);
+        }
+        touched = false;
+      });
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('is-active'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('is-active');
+      }
+      sendHeight();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const startBtn = document.querySelector('.btn-start');
+      if (startBtn) {
+        bindTap(startBtn, function() {
+          showScreen('intro');
+        });
+      }
+    });
+
+    function sendHeight() {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({ frameHeight: height }, '*');
+    }
+    window.addEventListener('resize', sendHeight);
+    window.addEventListener('load', sendHeight);
+  </script>
+</body>
+</html>
