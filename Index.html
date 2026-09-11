@@ -247,7 +247,17 @@ button, .btn-start, .tl-btn, .acc-row, .icon-btn, .bib-close {
 .cover-art, .cover-art-mobile, .intro-bg, .ev-illo, .acc-illo, svg {
   pointer-events: none !important;
 }
-
+/* ── TOUCH DEFENSIVE OVERRIDES (MOBILE TOUCH FIX) ── */
+button, .btn-start, .tl-btn, .acc-row, .icon-btn, .bib-close {
+  position: relative !important;
+  z-index: 9999 !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer !important;
+}
+.cover-art, .cover-art-mobile, .intro-bg, .ev-illo, .acc-illo, svg {
+  pointer-events: none !important;
+}
 @media(max-width:560px){
   html,body{overflow:auto;height:auto;}
   .screen{overflow:visible;}
